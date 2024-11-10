@@ -50,7 +50,7 @@
 #include <ncurses.h>
 
 /* Macro */
-#define NORMFRAMEW 35
+#define NORMFRAMEW 69
 #define SECFRAMEW  54
 #define DATEWINH   3
 #define AMSIGN     " [AM]"

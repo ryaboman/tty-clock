@@ -93,7 +93,7 @@ init(void)
      if(!ttyclock.geo.b)
           ttyclock.geo.b = 1;
      ttyclock.geo.w = (ttyclock.option.second) ? SECFRAMEW : NORMFRAMEW;
-     ttyclock.geo.h = 7;
+     ttyclock.geo.h = 13;
      ttyclock.tm = localtime(&(ttyclock.lt));
      if(ttyclock.option.utc) {
           ttyclock.tm = gmtime(&(ttyclock.lt));
@@ -217,14 +217,15 @@ update_hour(void)
 void
 draw_number(int n, int x, int y)
 {
-     int i, sy = y;
+     int i, sy = y, j=0;
 
-     for(i = 0; i < 30; ++i, ++sy)
+     for(i = 0; i < 120; ++i, ++sy, ++j)
      {
-          if(sy == y + 6)
+          if(sy == y + 12)
           {
                sy = y;
                ++x;
+               j = 12*(i/24);
           }
 
           if (ttyclock.option.bold)
@@ -232,7 +233,7 @@ draw_number(int n, int x, int y)
           else
                wattroff(ttyclock.framewin, A_BLINK);
 
-          wbkgdset(ttyclock.framewin, COLOR_PAIR(number[n][i/2]));
+          wbkgdset(ttyclock.framewin, COLOR_PAIR(number[n][j/4]));
           mvwaddch(ttyclock.framewin, x, sy, ' ');
      }
      wrefresh(ttyclock.framewin);
@@ -254,19 +255,21 @@ draw_clock(void)
 
      /* Draw hour numbers */
      draw_number(ttyclock.date.hour[0], 1, 1);
-     draw_number(ttyclock.date.hour[1], 1, 8);
+     draw_number(ttyclock.date.hour[1], 1, 16);
      chtype dotcolor = COLOR_PAIR(1);
      if (ttyclock.option.blink && time(NULL) % 2 == 0)
           dotcolor = COLOR_PAIR(2);
 
      /* 2 dot for number separation */
      wbkgdset(ttyclock.framewin, dotcolor);
-     mvwaddstr(ttyclock.framewin, 2, 16, "  ");
-     mvwaddstr(ttyclock.framewin, 4, 16, "  ");
+     mvwaddstr(ttyclock.framewin, 3, 32, "    ");
+     mvwaddstr(ttyclock.framewin, 4, 32, "    ");
+     mvwaddstr(ttyclock.framewin, 7, 32, "    ");
+     mvwaddstr(ttyclock.framewin, 8, 32, "    ");
 
      /* Draw minute numbers */
-     draw_number(ttyclock.date.minute[0], 1, 20);
-     draw_number(ttyclock.date.minute[1], 1, 27);
+     draw_number(ttyclock.date.minute[0], 1, 40);
+     draw_number(ttyclock.date.minute[1], 1, 55);
 
      /* Draw the date */
      if (ttyclock.option.bold)
